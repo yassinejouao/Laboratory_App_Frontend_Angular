@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import Chart from 'chart.js/auto';
 import { AnalysisService } from '../services/analysis.service';
-
 @Component({
-  selector: 'app-bar-chart',
-  templateUrl: './bar-chart.component.html',
-  styleUrls: ['./bar-chart.component.css'],
+  selector: 'app-bar-chart-monthly',
+  templateUrl: './bar-chart-monthly.component.html',
+  styleUrls: ['./bar-chart-monthly.component.css'],
 })
-export class BarChartComponent implements OnInit {
+export class BarChartMonthlyComponent implements OnInit {
+  @Output() dataEmitter: EventEmitter<any> = new EventEmitter<any>();
   public chart: any;
 
   constructor(private analysisService: AnalysisService) {}
@@ -15,10 +15,11 @@ export class BarChartComponent implements OnInit {
   ngOnInit(): void {
     this.getChartData();
   }
+
   getChartData() {
     // Calculate the start date 30 days before today
     const startDate = new Date();
-    startDate.setDate(startDate.getDate() - 30);
+    startDate.setDate(startDate.getDate() - 365);
 
     // Format dates to match the required format
     const formattedStartDate =
@@ -31,11 +32,11 @@ export class BarChartComponent implements OnInit {
       analysisTypeId: 1,
       startDate: formattedStartDate,
       endDate: formattedEndDate,
-      intervalRapport: 'DAY',
+      intervalRapport: 'MONTH',
     };
 
     // Make the API call to fetch analysis report
-    this.analysisService.getAnalysisReport(requestBody).subscribe(
+    this.analysisService.getAnalysisReportMonthly(requestBody).subscribe(
       (data) => {
         this.createChart(data);
       },
@@ -53,32 +54,27 @@ export class BarChartComponent implements OnInit {
 
     const labels = data.map((item) => item.groupedDate);
     const analysisData = data.map((item) => item.analysisCount);
-
-    this.chart = new Chart('MyChart', {
-      type: 'line', // This denotes the type of chart
+    this.sendDataToParent(analysisData[analysisData.length - 1]);
+    this.chart = new Chart('MyChartGAIN', {
+      type: 'bar', // This denotes the type of chart
 
       data: {
         // Values on X-Axis
         labels: labels,
         datasets: [
           {
-            label: 'this month analysis',
+            label: 'Monthly Earnings (MAD)',
             data: analysisData,
-            backgroundColor: '#DBEAFE',
-            fill: true,
-            borderColor: 'rgb(75, 192, 192)',
-            tension: 0.1,
+            backgroundColor: '#4BC0C0',
           },
         ],
       },
       options: {
         aspectRatio: 2.5,
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
-        },
       },
     });
+  }
+  sendDataToParent(data): void {
+    this.dataEmitter.emit(data);
   }
 }

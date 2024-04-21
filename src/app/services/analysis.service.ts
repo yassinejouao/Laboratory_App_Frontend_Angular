@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 const baseUrl = 'http://localhost:8080/analysis';
 const testbaseUrl = 'http://localhost:8080/test';
 
@@ -23,6 +24,9 @@ export class AnalysisService {
     return this.http.post<any>(`${baseUrl}/add`, data);
   }
   getAnalysisReport(requestBody: any): Observable<any[]> {
+    return this.http.post<any[]>(`${baseUrl}/rapport`, requestBody);
+  }
+  getAnalysisReportMonthly(requestBody: any): Observable<any[]> {
     return this.http.post<any[]>(`${baseUrl}/rapport`, requestBody);
   }
   getAnalysisCount(): Observable<number> {

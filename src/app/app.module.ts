@@ -34,6 +34,7 @@ import { AdminTemplateComponent } from './admin-template/admin-template.componen
 import { AppHttpInterceptor } from './interceptors/app-http.interceptor';
 import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
 import { BarChartComponent } from './bar-chart/bar-chart.component';
+import { BarChartMonthlyComponent } from './bar-chart-monthly/bar-chart-monthly.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { BarChartComponent } from './bar-chart/bar-chart.component';
     AdminTemplateComponent,
     NotAuthorizedComponent,
     BarChartComponent,
+    BarChartMonthlyComponent,
   ],
   imports: [
     BrowserModule,

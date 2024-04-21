@@ -8,10 +8,16 @@ import { AnalysisService } from '../services/analysis.service';
 })
 export class DashboardComponent implements OnInit {
   public count: number = 0;
+  LastMonthEarning: any;
+
   constructor(private analysisService: AnalysisService) {}
 
   ngOnInit(): void {
     this.getAnalysisCount();
+  }
+  handleDataFromChild(data: any): void {
+    this.LastMonthEarning = data;
+    console.log('Received data from child:', this.LastMonthEarning);
   }
   getAnalysisCount() {
     this.analysisService.getAnalysisCount().subscribe(

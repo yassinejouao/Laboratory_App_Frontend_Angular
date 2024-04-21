@@ -1,3 +1,37 @@
+<style>
+  .field {
+    position: relative;
+    display: inline-block;
+  }
+  .rightinfo {
+    position: absolute;
+    right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: translateY(-50%);
+    top: 50%;
+    height: 100%;
+    width: 30px;
+    background-color: greenyellow;
+  }
+  .inputinfo {
+    padding-right: 30px;
+    height: 100%;
+  }
+  .leftinfo {
+    position: absolute;
+    left: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: translateY(-50%);
+    top: 50%;
+    height: 100%;
+    width: 30px;
+    background-color: rgb(255, 117, 128);
+  }
+</style>
 <header>
   <div class="max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
     <div class="sm:flex sm:items-center sm:justify-between">
@@ -23,13 +57,14 @@
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div class="flex items-center">
                 <h1 for="valuetest" class="text-lg font-medium text-gray-900">
-                  {{ test.nameTest }} | max : {{ test.max }} | min :
-                  {{ test.min }} | {{ i }} | {{ test.idTest }}
+                  {{ test.nameTest }} :
                 </h1>
               </div>
-              <div class="flex items-center">
+              <div class="flex items-center field">
+                <h1 class="leftinfo">{{ test.min }}</h1>
+                <h1 class="rightinfo">{{ test.max }}</h1>
                 <input
-                  class="w-full rounded-lg border border-gray-200 p-3 text-sm"
+                  class="inputinfo w-full rounded-lg border border-gray-200 p-3 text-sm"
                   placeholder="result test"
                   type="text"
                   id="valuetest"
