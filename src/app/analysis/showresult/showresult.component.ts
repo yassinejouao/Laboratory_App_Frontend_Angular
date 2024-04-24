@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AnalysisService } from 'src/app/services/analysis.service';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-showresult',
@@ -11,24 +12,28 @@ import autoTable from 'jspdf-autotable';
 })
 export class ShowresultComponent implements OnInit {
   AnalysisResult?: any;
+  logoDataUrl: string;
+
   constructor(
     private analysisService: AnalysisService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
+    this.loadLogo();
     this.retrieveAnalysisResult();
   }
 
   public downloadInvoice() {
     const doc = new jsPDF();
-
+    doc.addImage(this.logoDataUrl, 'PNG', 10, 10, 80, 20);
     autoTable(doc, {
       body: [
         [
           {
-            content: 'Company brand',
+            content: '',
             styles: {
               halign: 'left',
               fontSize: 20,
@@ -36,7 +41,7 @@ export class ShowresultComponent implements OnInit {
             },
           },
           {
-            content: 'Analysis Result',
+            content: '',
             styles: {
               halign: 'right',
               fontSize: 20,
@@ -47,28 +52,11 @@ export class ShowresultComponent implements OnInit {
       ],
       theme: 'plain',
       styles: {
-        fillColor: '#3366ff',
+        fillColor: '',
       },
     });
-
     autoTable(doc, {
-      body: [
-        [
-          {
-            content:
-              'Reference: #R' +
-              this.AnalysisResult.id +
-              '\nDate: ' +
-              this.getFormattedDate(),
-            styles: {
-              halign: 'right',
-            },
-          },
-        ],
-      ],
-      theme: 'plain',
-    });
-    autoTable(doc, {
+      startY: 40,
       body: [
         [
           {
@@ -92,14 +80,40 @@ export class ShowresultComponent implements OnInit {
                 : this.AnalysisResult.resultAnalysis
                 ? 'NORMAL'
                 : 'ANORMAL') +
-              '\nStatus :',
+              '\nStatus : ' +
+              this.AnalysisResult.status,
             styles: {
               halign: 'left',
+            },
+          },
+          {
+            content:
+              'Reference: #R' +
+              this.AnalysisResult.id +
+              '\nDate: ' +
+              this.getFormattedDate(),
+            styles: {
+              halign: 'right',
             },
           },
         ],
       ],
       theme: 'plain',
+    });
+    autoTable(doc, {
+      head: [['test name', 'min', 'max', 'result', 'result status', 'status']],
+      body: this.AnalysisResult.testsDTO.map((item) => [
+        item.nameTest,
+        item.min,
+        item.max,
+        item.resultTest,
+        item.result,
+        item.status,
+      ]),
+      theme: 'striped',
+      headStyles: {
+        fillColor: '#343a40',
+      },
     });
 
     return doc.save('invoice');
@@ -116,6 +130,20 @@ export class ShowresultComponent implements OnInit {
         error: (e) => {
           console.log(e);
         },
+      });
+  }
+
+  loadLogo() {
+    this.http
+      .get('http://localhost:4200/assets/images/labxpert-logo.png', {
+        responseType: 'blob',
+      })
+      .subscribe((blob) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          this.logoDataUrl = reader.result.toString();
+        };
+        reader.readAsDataURL(blob);
       });
   }
   getFormattedDate(): string {
