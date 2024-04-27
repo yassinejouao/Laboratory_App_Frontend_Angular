@@ -24,7 +24,7 @@ export class AuthorizationGuard implements CanActivate {
     | boolean
     | UrlTree {
     const roles = route.data['roles'] as Array<string>;
-    if (roles.includes(this.authService.roles[0])) {
+    if (this.authService.roles.some((role) => roles.includes(role))) {
       return true;
     } else {
       this.router.navigateByUrl('admin/notAuthorized');

@@ -116,7 +116,15 @@ export class ShowresultComponent implements OnInit {
       },
     });
 
-    return doc.save('invoice');
+    return doc.save(
+      `AnalysisResult_` +
+        this.AnalysisResult.patientDTO.firstname +
+        `-` +
+        this.AnalysisResult.patientDTO.lastname +
+        `-` +
+        new Date().toISOString().slice(0, 10) +
+        `.pdf`
+    );
   }
 
   retrieveAnalysisResult(): void {

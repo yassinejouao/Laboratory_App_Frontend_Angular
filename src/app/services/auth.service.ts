@@ -43,8 +43,9 @@ export class AuthService {
 
   loadJwtTokenFromLocalStorage() {
     let accessToken = window.localStorage.getItem('jwt-token');
-    let roles: Array<string> = [];
-    roles.push(window.localStorage.getItem('roles'));
+    let roles: Array<string> = (
+      window.localStorage.getItem('roles') || ''
+    ).split(',');
     let username = window.localStorage.getItem('username');
     let data = { accessToken, username, roles };
     if (accessToken) {

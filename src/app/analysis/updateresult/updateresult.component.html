@@ -2,10 +2,16 @@
   .field {
     position: relative;
     display: inline-block;
+    border: 1px solid #ccc;
+  }
+  .namefield {
+    display: flex;
+    justify-content: right;
+    align-items: center;
   }
   .rightinfo {
     position: absolute;
-    right: 10px;
+    right: 0px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -18,10 +24,15 @@
   .inputinfo {
     padding-right: 30px;
     height: 100%;
+    padding-left: 45px;
+    border: 0px solid #ccc;
+  }
+  .inputinfo:focus {
+    outline: none;
   }
   .leftinfo {
     position: absolute;
-    left: 10px;
+    left: 0px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -55,7 +66,7 @@
             (ngSubmit)="onSave(i)"
           >
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              <div class="flex items-center">
+              <div class="flex items-center namefield">
                 <h1 for="valuetest" class="text-lg font-medium text-gray-900">
                   {{ test.nameTest }} :
                 </h1>
